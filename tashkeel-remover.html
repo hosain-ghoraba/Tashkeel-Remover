@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ماسح الشكيل</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: hsl(193, 94%, 87%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 80%;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 40%;
+            font-size: 24px;
+            font-family: Arial, sans-serif;
+            padding: 10px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 10px;
+            position: relative;
+            /* Establishes a positioning context */
+        }
+
+        button {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 20px;
+            background-color: rgb(18, 209, 18);
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 10%;
+        }
+
+        button:hover {
+            background-color: green;
+            color: white;
+        }
+
+        .feedback {
+            font-size: 25px;
+            color: green;
+            position: absolute;
+            top: 100%;
+            /* Position below the button */
+            margin-top: 10px;
+            /* Add some space between the button and the feedback */
+            visibility: hidden;
+            /* Initially hidden */
+            white-space: nowrap;
+            /* Prevent text from wrapping */
+        }
+
+        footer {
+            margin-top: auto;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>ماسح التشكيل من النص العربي </h1>
+    <div class="container">
+        <h2>ضع النص هنا</h2>
+        <textarea id="inputText" oninput="updateOutput()"></textarea>
+        <h2>بدون تشكيل</h2>
+        <textarea id="outputText" readonly></textarea>
+        <div class="button-container">
+            <button onclick="copyToClipboard()">نسخ</button>
+            <div id="feedback" class="feedback">تم النسخ إلى الحافظة</div>
+        </div>
+    </div>
+
+    <script>
+        function removeTashkeel(text) {
+            const tashkeel = /[\u0617-\u061A\u064B-\u0652\u0653-\u0654\u0656-\u065F\u06D6-\u06DC\u06DF-\u06E8\u06EA-\u06ED]/g;
+            text = text.replace(tashkeel, '');
+            const alefWasla = /\u0671/g;
+            text = text.replace(alefWasla, 'ا');
+            return text;
+        }
+
+        function updateOutput() {
+            const inputText = document.getElementById('inputText').value;
+            const outputText = removeTashkeel(inputText);
+            document.getElementById('outputText').value = outputText;
+        }
+
+        function copyToClipboard() {
+            const outputText = document.getElementById('outputText').value;
+            navigator.clipboard.writeText(outputText).then(() => {
+                const feedback = document.getElementById('feedback');
+                feedback.style.visibility = 'visible';
+                setTimeout(() => {
+                    feedback.style.visibility = 'hidden';
+                }, 1500); // Hide after 2 seconds
+            });
+        }
+    </script>
+
+    <!-- <footer>
+        Contact me at: <a href="mailto:hussain.ghoraba@gmail.com" style="color: white;">hussain.ghoraba@gmail.com</a>
+    </footer> -->
+</body>
+
+</html>
